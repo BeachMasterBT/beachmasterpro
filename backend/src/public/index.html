@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Beach Master Pro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header>
+    <h1>🏖️ Beach Master Pro</h1>
+    <p>Plataforma de Gestão, Arbitragem e Rede Social Esportiva</p>
+  </header>
+
+  <main>
+
+    <!-- STATUS BACKEND -->
+    <section>
+      <h2>Status do Sistema</h2>
+      <pre id="apiStatus">Carregando status do backend...</pre>
+    </section>
+
+    <!-- LOGIN -->
+    <section>
+      <h2>Login</h2>
+
+      <input type="email" id="email" placeholder="Email" />
+      <br /><br />
+      <input type="password" id="password" placeholder="Senha" />
+      <br /><br />
+
+      <button onclick="login()">Entrar</button>
+
+      <p id="loginMsg"></p>
+    </section>
+
+    <!-- EVENTOS -->
+    <section>
+      <h2>Eventos</h2>
+
+      <button onclick="loadEvents()">Carregar Eventos</button>
+
+      <ul id="eventList"></ul>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>© 2025 Beach Master Pro</p>
+  </footer>
+
+  <!-- JAVASCRIPT -->
+  <script src="app.js"></script>
+
+</body>
+</html>
