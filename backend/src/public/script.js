@@ -1,23 +1,33 @@
-// URL REAL DO BACKEND (já funcionando no Render)
+// URL REAL DO BACKEND
 const API_URL = "https://beachmasterpro.onrender.com";
 
-// STATUS DO BACKEND
+// 1. STATUS DO BACKEND (Corrigido para falar com o index.html novo)
 fetch(API_URL)
   .then(res => res.json())
   .then(data => {
-    document.getElementById("apiStatus").textContent =
-      "Conectado ao backend com sucesso!\n\n" +
-      JSON.stringify(data, null, 2);
+    // Mudamos 'apiStatus' para 'backend-status' para combinar com seu HTML
+    const statusElement = document.getElementById("backend-status");
+    if (statusElement) {
+        statusElement.style.color = "#27ae60"; // Verde profissional
+        statusElement.textContent = "Conectado ✅";
+        console.log("Backend respondendo:", data);
+    }
   })
-  .catch(() => {
-    document.getElementById("apiStatus").textContent =
-      "Erro ao conectar com o backend.";
+  .catch((err) => {
+    const statusElement = document.getElementById("backend-status");
+    if (statusElement) {
+        statusElement.style.color = "#c0392b"; // Vermelho de erro
+        statusElement.textContent = "Erro de conexão ❌";
+    }
+    console.error("Falha ao conectar no backend:", err);
   });
 
-// LOGIN
-function login() {
+// 2. FUNÇÃO DE LOGIN (Nomes ajustados para o seu index.html)
+function fazerLogin(event) {
+  if (event) event.preventDefault(); // Impede a página de recarregar
+  
   const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+  const password = document.getElementById("senha").value; // 'senha' com 's' minúsculo conforme o HTML
 
   fetch(API_URL + "/auth/login", {
     method: "POST",
@@ -28,29 +38,26 @@ function login() {
     .then(data => {
       if (data.token) {
         localStorage.setItem("token", data.token);
-        document.getElementById("loginMsg").style.color = "green";
-        document.getElementById("loginMsg").textContent =
-          "Login realizado com sucesso!";
-        loadEvents();
+        alert("Login realizado com sucesso!");
+        carregarEventos();
       } else {
-        document.getElementById("loginMsg").style.color = "red";
-        document.getElementById("loginMsg").textContent =
-          data.message || "Erro no login";
+        alert("Erro: " + (data.message || "Credenciais inválidas"));
       }
     })
     .catch(() => {
-      document.getElementById("loginMsg").style.color = "red";
-      document.getElementById("loginMsg").textContent =
-        "Erro de conexão com o servidor.";
+      alert("Erro de conexão com o servidor.");
     });
 }
 
-// EVENTOS
-function loadEvents() {
+// 3. CARREGAR EVENTOS
+function carregarEventos() {
+  const list = document.getElementById("eventos-lista");
+  if (list) list.innerHTML = "<li>Carregando...</li>";
+
   fetch(API_URL + "/events")
     .then(res => res.json())
     .then(events => {
-      const list = document.getElementById("eventList");
+      if (!list) return;
       list.innerHTML = "";
 
       if (!events || events.length === 0) {
@@ -60,11 +67,11 @@ function loadEvents() {
 
       events.forEach(e => {
         const li = document.createElement("li");
-        li.textContent = e.name || "Evento sem nome";
+        li.textContent = e.nome || e.name || "Evento Esportivo";
         list.appendChild(li);
       });
     })
     .catch(() => {
-      alert("Erro ao carregar eventos");
+      if (list) list.innerHTML = "<li>Erro ao carregar eventos</li>";
     });
 }
