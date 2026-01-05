@@ -1,33 +1,55 @@
-function fazerLogin(event) {
-  if (event) event.preventDefault();
-  
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("senha").value;
+import express from "express";
+import cors from "cors";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
 
-  fetch(API_URL + "/auth/login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password })
-  })
-    .then(res => res.json())
-    .then(data => {
-      if (data.token) {
-        localStorage.setItem("token", data.token);
-        alert("Login realizado com sucesso!");
-        
-        // --- O COMANDO QUE ESTAVA FALTANDO ---
-        // Aqui você escolhe para onde o usuário vai após o login
-        // Por enquanto, vamos simular a entrada escondendo o login e mostrando o conteúdo
-        document.querySelector('.container').innerHTML = `
-          <h1>Bem-vindo ao Painel Beach Master</h1>
-          <p>Você está logado como: ${email}</p>
-          <button onclick="location.reload()">Sair do Sistema</button>
-        `;
-      } else {
-        alert("Erro: " + (data.message || "Credenciais inválidas"));
-      }
-    })
-    .catch(() => {
-      alert("Erro de conexão com o servidor.");
-    });
-}
+dotenv.config();
+const app = express();
+const PORT = process.env.PORT || 10000;
+
+// CONFIGURAÇÃO DE SEGURANÇA (CORS)
+app.use(cors({
+  origin: 'https://beachmasterpro-frontend.onrender.com',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+app.use(express.json());
+
+// CONEXÃO COM O MONGODB
+const mongoURI = process.env.MONGODB_URI;
+mongoose.connect(mongoURI)
+  .then(() => console.log("✅ Banco de Dados Conectado!"))
+  .catch((err) => console.error("❌ Erro MongoDB:", err));
+
+// MODELO DE EVENTO
+const Evento = mongoose.model("Evento", new mongoose.Schema({ nome: String }));
+
+// ROTAS
+app.get("/", (req, res) => res.json({ status: "Online", sistema: "Beach Master Pro" }));
+
+app.get("/health", (req, res) => res.json({ status: "OK" }));
+
+app.get("/events", async (req, res) => {
+  try {
+    const eventos = await Evento.find();
+    res.json(eventos.length > 0 ? eventos : [{ nome: "Torneio Exemplo 2025" }]);
+  } catch (error) {
+    res.status(500).json({ error: true });
+  }
+});
+
+app.post("/auth/login", (req, res) => {
+  const { email, password } = req.body;
+  if (email === "beachmasterbt@gmail.com" && password === "Sama1106") {
+    return res.json({ token: "sucesso_auth", message: "Login realizado!" });
+  }
+  res.status(401).json({ error: true, message: "Credenciais inválidas" });
+});
+
+// INICIAR O SERVIDOR
+app.listen(PORT, () => {
+  console.log(`🚀 Servidor rodando na porta ${PORT}`);
+});
+
+export default app;
