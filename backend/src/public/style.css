@@ -1,104 +1,19 @@
-/* Reset básico */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-/* Corpo */
 body {
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-  color: #ffffff;
-  min-height: 100vh;
+  background: #f4f7f6;
+  font-family: Arial;
 }
-
-/* Container principal */
 .container {
-  max-width: 420px;
-  margin: 60px auto;
-  background: #ffffff;
-  color: #333;
+  background: white;
+  padding: 20px;
+  max-width: 400px;
+  margin: auto;
   border-radius: 10px;
-  padding: 25px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
-
-/* Títulos */
-h1 {
-  text-align: center;
-  margin-bottom: 10px;
-  color: #2c5364;
-}
-
-h2 {
-  margin-top: 20px;
-  margin-bottom: 10px;
-  color: #203a43;
-  font-size: 18px;
-}
-
-/* Texto */
-p {
-  font-size: 14px;
-  margin-bottom: 10px;
-}
-
-/* Inputs */
-input {
-  width: 100%;
-  padding: 10px;
-  margin-top: 6px;
-  margin-bottom: 12px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 14px;
-}
-
-/* Botões */
 button {
-  width: 100%;
-  padding: 12px;
-  background: #2c5364;
-  color: #fff;
+  background: #f39c12;
   border: none;
-  border-radius: 6px;
-  font-size: 15px;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-button:hover {
-  background: #203a43;
-}
-
-/* Status do backend */
-#apiStatus {
-  background: #f4f4f4;
-  color: #333;
   padding: 10px;
-  border-radius: 6px;
-  font-size: 12px;
-  overflow-x: auto;
-}
-
-/* Mensagens */
-#loginMsg {
-  margin-top: 10px;
-  font-size: 13px;
-  text-align: center;
-}
-
-/* Lista de eventos */
-ul {
-  list-style: none;
-  margin-top: 10px;
-}
-
-ul li {
-  background: #f0f0f0;
-  margin-bottom: 6px;
-  padding: 8px;
-  border-radius: 5px;
-  font-size: 14px;
+  color: white;
+  width: 100%;
+  margin-top: 5px;
 }

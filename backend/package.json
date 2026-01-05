@@ -2,11 +2,11 @@
   "name": "beach-master-pro-backend",
   "version": "1.0.0",
   "description": "Backend oficial do Beach Master Pro e rede social Lif Kin",
-  "main": "src/server.js",
+  "main": "srcserver.js",
   "type": "module",
   "scripts": {
-    "start": "node src/server.js",
-    "dev": "nodemon src/server.js"
+    "start": "node srcserver.js",
+    "dev": "nodemon srcserver.js"
   },
   "author": "Beach Master Pro",
   "license": "PROPRIETARY",

@@ -1,51 +1,35 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Beach Master Pro</title>
-    <link rel="stylesheet" href="/style.css">
+  <meta charset="UTF-8">
+  <title>Beach Master Pro</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>🏖️ Beach Master Pro</h1>
-            <p>Plataforma de Gestão, Arbitragem e Rede Social Esportiva</p>
-        </header>
 
-        <section class="status-section">
-            <h2>Status do Sistema</h2>
-            <span id="backend-status">Carregando status do backend...</span>
-        </section>
+<div class="container">
+  <h1>🏖️ Beach Master Pro</h1>
 
-        <section>
-            <h2>Login</h2>
-            <form id="login-form" onsubmit="fazerLogin(event)">
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="email" placeholder="seu@email.com" required>
-                </div>
-                <div class="form-group">
-                    <label>Senha</label>
-                    <input type="password" id="senha" placeholder="******" required>
-                </div>
-                <button type="submit" class="btn-primary">Entrar no Sistema</button>
-            </form>
-        </section>
+  <p>Status: <span id="status">Carregando...</span></p>
 
-        <hr>
+  <form onsubmit="login(event)">
+    <input id="email" placeholder="Email" required>
+    <input id="senha" type="password" placeholder="Senha" required>
+    <button>Entrar</button>
+  </form>
 
-        <section id="eventos-secao">
-            <h2>Eventos</h2>
-            <button onclick="carregarEventos()" class="btn-secondary">Visualizar Eventos</button>
-            <div id="eventos-lista"></div>
-        </section>
+  <hr>
 
-        <footer>
-            <p>© 2025 Beach Master Pro</p>
-        </footer>
-    </div>
+  <h2>Painel Admin</h2>
 
-    <script src="/script.js"></script>
+  <input id="nomeEvento" placeholder="Nome do Evento">
+  <input id="dataEvento" placeholder="Data">
+  <button onclick="salvarTorneio()">Criar Evento</button>
+
+  <h3>Eventos</h3>
+  <ul id="listaEventos"></ul>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
