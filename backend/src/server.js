@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 const app = express();
+const PORT = process.env.PORT || 10000; // ESSA LINHA RESOLVE O ERRO DE PORTA
 
 // CONFIGURAÇÃO DE SEGURANÇA (CORS)
 app.use(cors({
@@ -15,40 +16,40 @@ app.use(cors({
 
 app.use(express.json());
 
-// CONEXÃO COM O MONGODB (Usando sua variável do Render)
+// CONEXÃO COM O MONGODB
 const mongoURI = process.env.MONGODB_URI;
-
 mongoose.connect(mongoURI)
-  .then(() => console.log("✅ Banco de Dados MongoDB Conectado!"))
-  .catch((err) => console.error("❌ Erro ao conectar ao MongoDB:", err));
+  .then(() => console.log("✅ Banco de Dados Conectado!"))
+  .catch((err) => console.error("❌ Erro MongoDB:", err));
 
-// MODELO DE EVENTO (Para o banco de dados)
-const EventoSchema = new mongoose.Schema({ nome: String });
-const Evento = mongoose.model("Evento", EventoSchema);
+// MODELO DE EVENTO
+const Evento = mongoose.model("Evento", new mongoose.Schema({ nome: String }));
 
 // ROTAS
 app.get("/", (req, res) => res.json({ status: "Online", sistema: "Beach Master Pro" }));
 
-// ROTA REAL DE EVENTOS (Busca no seu MongoDB)
+app.get("/health", (req, res) => res.json({ status: "OK" }));
+
 app.get("/events", async (req, res) => {
   try {
     const eventos = await Evento.find();
-    res.json(eventos.length > 0 ? eventos : [
-      { nome: "Torneio de Verão 2025 (Exemplo)" },
-      { nome: "Circuito Pro (Exemplo)" }
-    ]);
+    res.json(eventos.length > 0 ? eventos : [{ nome: "Torneio Exemplo 2025" }]);
   } catch (error) {
-    res.status(500).json({ error: true, message: "Erro ao buscar no banco" });
+    res.status(500).json({ error: true });
   }
 });
 
-// ROTA DE LOGIN (Validando com seus dados)
 app.post("/auth/login", (req, res) => {
   const { email, password } = req.body;
   if (email === "beachmasterbt@gmail.com" && password === "Sama1106") {
-    return res.json({ token: "sucesso_auth_beach_master", message: "Login realizado!" });
+    return res.json({ token: "sucesso_auth", message: "Login realizado!" });
   }
   res.status(401).json({ error: true, message: "Credenciais inválidas" });
+});
+
+// COMANDO PARA LIGAR O SERVIDOR (O QUE ESTAVA FALTANDO)
+app.listen(PORT, () => {
+  console.log(`🚀 Servidor rodando na porta ${PORT}`);
 });
 
 export default app;
