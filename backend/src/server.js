@@ -3,89 +3,46 @@ import http from "http";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
-import helmet from "helmet";
-import morgan from "morgan";
-import { Server } from "socket.io";
-import rateLimit from "express-rate-limit";
 
 dotenv.config();
-
 const app = express();
 const server = http.createServer(app);
 
-// SEGURANÇA BÁSICA
-app.use(helmet());
-app.use(cors({ origin: "*" })); // Liberado para o seu frontend acessar
+// Configuração de acesso
+app.use(cors({ origin: "*" }));
+app.use(express.json());
 
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 300,
-  standardHeaders: true,
-  legacyHeaders: false
-});
-app.use(limiter);
+// Conexão com o Banco de Dados
+mongoose.connect(process.env.MONGODB_URI)
+  .then(() => console.log("✅ Banco Conectado"))
+  .catch((err) => console.error("❌ Erro Banco:", err));
 
-app.use(express.json({ limit: "10mb" }));
-app.use(express.urlencoded({ extended: true }));
-app.use(morgan("combined"));
+// Modelo de Dados
+const Evento = mongoose.model("Evento", new mongoose.Schema({ nome: String, data: String }));
 
-// BANCO DE DADOS
-mongoose
-  .connect(process.env.MONGODB_URI)
-  .then(() => console.log("✅ MongoDB conectado com sucesso"))
-  .catch((error) => console.error("❌ Erro ao conectar no MongoDB:", error.message));
+// --- AS ROTAS QUE VÃO TIRAR O ERRO 401 ---
 
-// MODELO DE EVENTO
-const Evento = mongoose.model("Evento", new mongoose.Schema({
-  nome: String,
-  data: String
-}));
-
-// SOCKET.IO
-const io = new Server(server, {
-  cors: { origin: "*", methods: ["GET", "POST"] }
-});
-
-// ============================
-// AS ROTAS QUE ESTAVAM FALTANDO:
-// ============================
-
-// 1. Rota de Login
+// Rota de Login (Verifica suas credenciais)
 app.post("/auth/login", (req, res) => {
   const { email, password } = req.body;
-  // Verificando suas credenciais exatas
   if (email === "beachmasterbt@gmail.com" && password === "Sama1106") {
-    return res.json({ token: "sucesso_auth_beach_master", message: "Login realizado!" });
+    return res.json({ token: "sucesso", message: "Login OK" });
   }
-  res.status(401).json({ error: true, message: "E-mail ou senha incorretos" });
+  res.status(401).json({ message: "Login falhou" });
 });
 
-// 2. Rota para Listar Eventos
+// Rota de Eventos
 app.get("/events", async (req, res) => {
-  try {
-    const eventos = await Evento.find();
-    res.json(eventos);
-  } catch (error) {
-    res.status(500).json({ error: true });
-  }
+  const eventos = await Evento.find();
+  res.json(eventos);
 });
 
-// 3. Rota para Criar Evento
 app.post("/events", async (req, res) => {
-  try {
-    const novoEvento = new Evento(req.body);
-    await novoEvento.save();
-    res.json(novoEvento);
-  } catch (error) {
-    res.status(500).json({ error: true });
-  }
+  const novo = new Evento(req.body);
+  await novo.save();
+  res.json(novo);
 });
 
-app.get("/health", (req, res) => res.json({ status: "OK" }));
-app.get("/", (req, res) => res.json({ status: "Online" }));
-
-// INICIAR SERVIDOR
-const PORT = process.env.PORT || 10000; 
-server.listen(PORT, () => {
-  console.log(`🚀 Servidor rodando na porta ${PORT}`);
-});
+// Iniciar
+const PORT = process.env.PORT || 10000;
+server.listen(PORT, () => console.log("🚀 Sistema Pronto"));
