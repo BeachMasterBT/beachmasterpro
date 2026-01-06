@@ -1,33 +1,37 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Beach Master Pro</title>
-  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
 <div class="container">
   <h1>🏖️ Beach Master Pro</h1>
 
-  <p>Status: <span id="status">Carregando...</span></p>
+  <p>Status do Sistema:
+    <span id="backend-status">Carregando...</span>
+  </p>
 
-  <form onsubmit="login(event)">
-    <input id="email" placeholder="Email" required>
-    <input id="senha" type="password" placeholder="Senha" required>
-    <button>Entrar</button>
-  </form>
+  <section id="login">
+    <input id="email" type="email" placeholder="E-mail" />
+    <input id="senha" type="password" placeholder="Senha" />
+    <button onclick="fazerLogin()">Entrar</button>
+  </section>
 
-  <hr>
+  <section id="admin">
+    <h3>Criar Evento</h3>
+    <input id="nomeEvento" placeholder="Nome do Evento" />
+    <input id="dataEvento" placeholder="Data (ex: 20/10)" />
+    <button onclick="criarEvento()">Salvar Evento</button>
+  </section>
 
-  <h2>Painel Admin</h2>
-
-  <input id="nomeEvento" placeholder="Nome do Evento">
-  <input id="dataEvento" placeholder="Data">
-  <button onclick="salvarTorneio()">Criar Evento</button>
-
-  <h3>Eventos</h3>
-  <ul id="listaEventos"></ul>
+  <section>
+    <h3>Eventos</h3>
+    <ul id="eventos-lista"></ul>
+  </section>
 </div>
 
 <script src="script.js"></script>

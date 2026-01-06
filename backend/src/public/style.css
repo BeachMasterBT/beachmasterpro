@@ -1,19 +1,38 @@
 body {
   background: #f4f7f6;
-  font-family: Arial;
+  font-family: Arial, sans-serif;
 }
+
 .container {
-  background: white;
+  max-width: 420px;
+  background: #fff;
+  margin: 40px auto;
   padding: 20px;
-  max-width: 400px;
-  margin: auto;
-  border-radius: 10px;
+  border-radius: 12px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
 }
+
+h1 {
+  color: #2c3e50;
+}
+
 button {
   background: #f39c12;
+  color: white;
   border: none;
   padding: 10px;
-  color: white;
   width: 100%;
-  margin-top: 5px;
+  margin-top: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 6px;
+}
+
+#backend-status {
+  font-weight: bold;
 }
