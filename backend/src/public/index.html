@@ -1,38 +1,47 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <title>Beach Master Pro</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<div class="container">
+<header>
   <h1>🏖️ Beach Master Pro</h1>
+  <p>Plataforma Profissional de Beach Tennis</p>
+</header>
 
-  <p>Status do Sistema:
-    <span id="backend-status">Carregando...</span>
-  </p>
+<main>
+  <section id="status">
+    <h2>Status do Sistema</h2>
+    <div id="apiStatus">🔌 Verificando conexão...</div>
+  </section>
 
-  <section id="login">
-    <input id="email" type="email" placeholder="E-mail" />
-    <input id="senha" type="password" placeholder="Senha" />
+  <section id="login-container">
+    <h2>Acesso ao Painel</h2>
+    <input type="email" id="email" placeholder="E-mail" />
+    <input type="password" id="password" placeholder="Senha" />
     <button onclick="fazerLogin()">Entrar</button>
   </section>
 
-  <section id="admin">
-    <h3>Criar Evento</h3>
-    <input id="nomeEvento" placeholder="Nome do Evento" />
-    <input id="dataEvento" placeholder="Data (ex: 20/10)" />
-    <button onclick="criarEvento()">Salvar Evento</button>
+  <section id="admin-panel" style="display: none;">
+    <h2>Gerenciar Torneios</h2>
+    <input type="text" id="nomeEvento" placeholder="Nome do Evento" />
+    <input type="text" id="dataEvento" placeholder="Data (ex: 15/03)" />
+    <button onclick="criarEvento()" class="btn-cadastrar">Cadastrar Torneio</button>
   </section>
 
-  <section>
-    <h3>Eventos</h3>
-    <ul id="eventos-lista"></ul>
+  <section id="events">
+    <h2>Torneios Disponíveis</h2>
+    <ul id="eventList"></ul>
   </section>
-</div>
+</main>
+
+<footer>
+  <p>© 2026 Beach Master Pro — Gestão Esportiva de Elite</p>
+</footer>
 
 <script src="script.js"></script>
 </body>
