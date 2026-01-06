@@ -1,37 +1,32 @@
 import express from "express";
-import http from "http";
-import dotenv from "dotenv";
-import mongoose from "mongoose";
 import cors from "cors";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
 
 dotenv.config();
 const app = express();
-const server = http.createServer(app);
 
-// Configuração de acesso
-app.use(cors({ origin: "*" }));
+app.use(cors());
 app.use(express.json());
 
-// Conexão com o Banco de Dados
+// BANCO DE DADOS
 mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log("✅ Banco Conectado"))
+  .then(() => console.log("✅ MongoDB Conectado"))
   .catch((err) => console.error("❌ Erro Banco:", err));
 
-// Modelo de Dados
 const Evento = mongoose.model("Evento", new mongoose.Schema({ nome: String, data: String }));
 
-// --- AS ROTAS QUE VÃO TIRAR O ERRO 401 ---
+// ROTAS
+app.get("/health", (req, res) => res.json({ status: "OK" })); // ESSA LINHA RESOLVE O ERRO 404
 
-// Rota de Login (Verifica suas credenciais)
 app.post("/auth/login", (req, res) => {
   const { email, password } = req.body;
   if (email === "beachmasterbt@gmail.com" && password === "Sama1106") {
-    return res.json({ token: "sucesso", message: "Login OK" });
+    return res.json({ message: "Login OK", token: "sucesso" });
   }
-  res.status(401).json({ message: "Login falhou" });
+  res.status(401).json({ message: "Erro" });
 });
 
-// Rota de Eventos
 app.get("/events", async (req, res) => {
   const eventos = await Evento.find();
   res.json(eventos);
@@ -43,6 +38,5 @@ app.post("/events", async (req, res) => {
   res.json(novo);
 });
 
-// Iniciar
 const PORT = process.env.PORT || 10000;
-server.listen(PORT, () => console.log("🚀 Sistema Pronto"));
+app.listen(PORT, () => console.log("🚀 Servidor Pronto"));
