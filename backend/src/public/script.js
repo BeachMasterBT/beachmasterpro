@@ -1,61 +1,58 @@
 const API_URL = "https://beachmasterpro.onrender.com";
 
-window.onload = () => {
-    verificarConexao();
-    carregarEventos();
-};
-
-async function verificarConexao() {
-    const statusDiv = document.getElementById("apiStatus");
-    try {
-        const res = await fetch(`${API_URL}/health`);
-        const data = await res.json();
-        if (data.status === "OK") {
-            statusDiv.innerHTML = "Conectado ✅";
-            statusDiv.style.color = "green";
-        }
-    } catch (err) {
-        statusDiv.innerHTML = "Erro de Conexão ❌";
-        statusDiv.style.color = "red";
-    }
-}
-
 async function fazerLogin() {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
 
-    const res = await fetch(`${API_URL}/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password })
-    });
+    console.log("Tentando login..."); // Isso aparecerá no seu console
 
-    if (res.ok) {
-        alert("Bem-vindo, Beach Master!");
-        document.getElementById("login-container").style.display = "none";
-        document.getElementById("admin-panel").style.display = "block";
-    } else {
-        alert("Acesso Negado: Verifique suas credenciais.");
+    try {
+        const res = await fetch(`${API_URL}/auth/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password })
+        });
+
+        const data = await res.json();
+
+        if (res.ok || data.message === "Login OK") {
+            alert("Bem-vindo, Beach Master!");
+            
+            // ESTE É O COMANDO QUE ABRE O SISTEMA:
+            document.getElementById("login-container").style.display = "none";
+            document.getElementById("admin-panel").style.display = "block";
+            
+            carregarEventos();
+        } else {
+            alert("E-mail ou senha incorretos.");
+        }
+    } catch (err) {
+        console.error("Erro ao conectar:", err);
+        alert("Erro de conexão com o servidor.");
     }
 }
 
+// Garante que a função carregarEventos exista para não dar erro
 async function carregarEventos() {
     const lista = document.getElementById("eventList");
-    const res = await fetch(`${API_URL}/events`);
-    const eventos = await res.json();
-    lista.innerHTML = eventos.map(ev => `<li>🏆 <strong>${ev.nome}</strong> - ${ev.data}</li>`).join("");
+    try {
+        const res = await fetch(`${API_URL}/events`);
+        const eventos = await res.json();
+        lista.innerHTML = eventos.map(ev => `<li>🏆 <strong>${ev.nome}</strong> - ${ev.data}</li>`).join("");
+    } catch (e) {
+        console.log("Nenhum evento encontrado ainda.");
+    }
 }
 
-async function criarEvento() {
-    const nome = document.getElementById("nomeEvento").value;
-    const data = document.getElementById("dataEvento").value;
-    
-    await fetch(`${API_URL}/events`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nome, data })
-    });
-
-    alert("Torneio publicado!");
-    carregarEventos();
-}
+// Verifica conexão ao abrir a página
+window.onload = () => {
+    fetch(`${API_URL}/health`)
+        .then(res => res.json())
+        .then(data => {
+            const statusDiv = document.getElementById("apiStatus");
+            if(data.status === "OK") {
+                statusDiv.innerHTML = "Conectado ✅";
+                statusDiv.style.color = "green";
+            }
+        });
+};
