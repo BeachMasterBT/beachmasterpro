@@ -4,56 +4,63 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 
 dotenv.config();
-
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// 🔌 Conexão com MongoDB
 mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log("✅ MongoDB conectado"))
-  .catch(err => console.error("❌ Erro MongoDB:", err));
+  .then(() => console.log("✅ Beach Master Pro: Banco de Dados Conectado"))
+  .catch(err => console.error("❌ Erro:", err));
 
-// 📦 Model
+// --- MOLDES DO SISTEMA ---
 const EventoSchema = new mongoose.Schema({
   nome: String,
   data: String,
-  criadoEm: { type: Date, default: Date.now }
+  categoria: String,
+  local: String
 });
+
+const PostSchema = new mongoose.Schema({
+  usuario: String,
+  conteudo: String,
+  data: { type: Date, default: Date.now }
+});
+
 const Evento = mongoose.model("Evento", EventoSchema);
+const Post = mongoose.model("Post", PostSchema);
 
-// 🟢 Health Check (obrigatório para frontend)
-app.get("/health", (req, res) => {
-  res.json({ status: "OK" });
-});
+// --- COMANDOS DO SITE ---
+app.get("/health", (req, res) => res.json({ status: "Online" }));
 
-// 🔐 Login simples (MVP)
 app.post("/auth/login", (req, res) => {
   const { email, password } = req.body;
-
   if (email === "beachmasterbt@gmail.com" && password === "Sama1106") {
-    return res.json({ token: "login-ok", user: { email } });
+    return res.json({ token: "MASTER-OK" });
   }
-
-  return res.status(401).json({ message: "Credenciais inválidas" });
+  return res.status(401).json({ message: "Acesso Negado" });
 });
 
-// 📋 Listar eventos
 app.get("/events", async (req, res) => {
-  const eventos = await Evento.find().sort({ criadoEm: -1 });
+  const eventos = await Evento.find();
   res.json(eventos);
 });
 
-// ➕ Criar evento
 app.post("/events", async (req, res) => {
-  const { nome, data } = req.body;
-  const novoEvento = new Evento({ nome, data });
-  await novoEvento.save();
-  res.json(novoEvento);
+  const novo = new Evento(req.body);
+  await novo.save();
+  res.json(novo);
 });
 
-// 🚀 Start
+app.get("/lifkin", async (req, res) => {
+  const posts = await Post.find().sort({ data: -1 });
+  res.json(posts);
+});
+
+app.post("/lifkin", async (req, res) => {
+  const novo = new Post(req.body);
+  await novo.save();
+  res.json(novo);
+});
+
 const PORT = process.env.PORT || 10000;
-app.listen(PORT, () =>
-  console.log(`🚀 Beach Master Pro rodando na porta ${PORT}`)
-);
+app.listen(PORT, () => console.log(`🚀 Sistema Online na porta ${PORT}`));
