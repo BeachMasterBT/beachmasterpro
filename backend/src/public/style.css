@@ -1,77 +1,87 @@
+/* CORES DO BEACH MASTER PRO */
 :root {
-  --azul: #0066cc;
-  --laranja: #f39c12;
-  --cinza: #f4f6f8;
-  --escuro: #1e293b;
-}
-
-* {
-  box-sizing: border-box;
+  --neon-blue: #00f3ff;
+  --neon-purple: #bc13fe;
+  --dark-bg: #0d0d12;
+  --card-bg: #1a1a24;
+  --text: #ffffff;
 }
 
 body {
   margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-  background: var(--cinza);
+  font-family: 'Segoe UI', sans-serif;
+  background: var(--dark-bg);
+  color: var(--text);
   display: flex;
   justify-content: center;
-  align-items: center;
   min-height: 100vh;
 }
 
 .container {
-  background: white;
   width: 100%;
-  max-width: 420px;
-  padding: 24px;
-  border-radius: 14px;
-  box-shadow: 0 10px 30px rgba(0,0,0,.1);
+  max-width: 400px;
+  background: var(--card-bg);
+  padding: 20px;
+  border: 1px solid #333;
+  box-shadow: 0 0 20px rgba(0, 243, 255, 0.1);
 }
 
 h1 {
   text-align: center;
-  color: var(--azul);
+  color: var(--neon-blue);
+  text-shadow: 0 0 10px var(--neon-blue);
+  font-size: 24px;
 }
 
-.status {
-  text-align: center;
-  margin-bottom: 16px;
-  font-weight: bold;
-}
-
-input {
+/* BOTÕES E ENTRADAS */
+input, select {
   width: 100%;
   padding: 12px;
   margin-top: 10px;
+  background: #252533;
+  border: 1px solid #444;
+  color: white;
   border-radius: 8px;
-  border: 1px solid #ccc;
+  box-sizing: border-box;
 }
 
 button {
   width: 100%;
-  margin-top: 12px;
-  padding: 12px;
+  margin-top: 15px;
+  padding: 14px;
   border: none;
   border-radius: 8px;
-  background: var(--laranja);
+  background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
   color: white;
   font-weight: bold;
   cursor: pointer;
 }
 
-button:hover {
-  opacity: .9;
+/* ABAS DO MENU (Torneios, Ranking, Lif Kin) */
+.nav-tabs {
+  display: flex;
+  justify-content: space-around;
+  margin: 20px 0;
+  border-bottom: 1px solid #333;
 }
 
-#painel {
-  display: none;
-  margin-top: 20px;
-}
-
-.evento {
-  background: var(--cinza);
+.nav-tabs span {
   padding: 10px;
-  border-radius: 6px;
-  margin-top: 8px;
-  font-size: 14px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #888;
+}
+
+.active-tab {
+  color: var(--neon-blue) !important;
+  border-bottom: 2px solid var(--neon-blue);
+}
+
+/* CARDS DE EVENTOS E POSTS */
+.card {
+  background: #252533;
+  padding: 15px;
+  border-radius: 10px;
+  margin-top: 15px;
+  border-left: 4px solid var(--neon-purple);
 }
