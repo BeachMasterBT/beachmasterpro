@@ -1,47 +1,36 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Beach Master Pro</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header>
+<div class="container">
   <h1>🏖️ Beach Master Pro</h1>
-  <p>Plataforma Profissional de Beach Tennis</p>
-</header>
 
-<main>
-  <section id="status">
-    <h2>Status do Sistema</h2>
-    <div id="apiStatus">🔌 Verificando conexão...</div>
-  </section>
+  <div class="status">
+    Status: <span id="status">Carregando...</span>
+  </div>
 
-  <section id="login-container">
-    <h2>Acesso ao Painel</h2>
-    <input type="email" id="email" placeholder="E-mail" />
-    <input type="password" id="password" placeholder="Senha" />
-    <button onclick="fazerLogin()">Entrar</button>
-  </section>
+  <div id="login">
+    <input type="email" id="email" placeholder="E-mail">
+    <input type="password" id="senha" placeholder="Senha">
+    <button onclick="login()">Entrar</button>
+  </div>
 
-  <section id="admin-panel" style="display: none;">
-    <h2>Gerenciar Torneios</h2>
-    <input type="text" id="nomeEvento" placeholder="Nome do Evento" />
-    <input type="text" id="dataEvento" placeholder="Data (ex: 15/03)" />
-    <button onclick="criarEvento()" class="btn-cadastrar">Cadastrar Torneio</button>
-  </section>
+  <div id="painel">
+    <h3>Criar Evento</h3>
+    <input type="text" id="nomeEvento" placeholder="Nome do torneio">
+    <input type="text" id="dataEvento" placeholder="Data">
+    <button onclick="criarEvento()">Salvar Evento</button>
 
-  <section id="events">
-    <h2>Torneios Disponíveis</h2>
-    <ul id="eventList"></ul>
-  </section>
-</main>
-
-<footer>
-  <p>© 2026 Beach Master Pro — Gestão Esportiva de Elite</p>
-</footer>
+    <h3>Eventos</h3>
+    <div id="listaEventos"></div>
+  </div>
+</div>
 
 <script src="script.js"></script>
 </body>
