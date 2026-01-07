@@ -1,58 +1,66 @@
-const API_URL = "https://beachmasterpro.onrender.com";
+const API = "https://beachmasterpro.onrender.com";
 
-async function fazerLogin() {
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
+const statusEl = document.getElementById("status");
+const painel = document.getElementById("painel");
+const loginDiv = document.getElementById("login");
 
-    console.log("Tentando login..."); // Isso aparecerá no seu console
-
-    try {
-        const res = await fetch(`${API_URL}/auth/login`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password })
-        });
-
-        const data = await res.json();
-
-        if (res.ok || data.message === "Login OK") {
-            alert("Bem-vindo, Beach Master!");
-            
-            // ESTE É O COMANDO QUE ABRE O SISTEMA:
-            document.getElementById("login-container").style.display = "none";
-            document.getElementById("admin-panel").style.display = "block";
-            
-            carregarEventos();
-        } else {
-            alert("E-mail ou senha incorretos.");
-        }
-    } catch (err) {
-        console.error("Erro ao conectar:", err);
-        alert("Erro de conexão com o servidor.");
-    }
-}
-
-// Garante que a função carregarEventos exista para não dar erro
-async function carregarEventos() {
-    const lista = document.getElementById("eventList");
-    try {
-        const res = await fetch(`${API_URL}/events`);
-        const eventos = await res.json();
-        lista.innerHTML = eventos.map(ev => `<li>🏆 <strong>${ev.nome}</strong> - ${ev.data}</li>`).join("");
-    } catch (e) {
-        console.log("Nenhum evento encontrado ainda.");
-    }
-}
-
-// Verifica conexão ao abrir a página
 window.onload = () => {
-    fetch(`${API_URL}/health`)
-        .then(res => res.json())
-        .then(data => {
-            const statusDiv = document.getElementById("apiStatus");
-            if(data.status === "OK") {
-                statusDiv.innerHTML = "Conectado ✅";
-                statusDiv.style.color = "green";
-            }
-        });
+  fetch(API + "/health")
+    .then(res => res.json())
+    .then(() => {
+      statusEl.innerText = "Conectado ✅";
+      statusEl.style.color = "green";
+    })
+    .catch(() => {
+      statusEl.innerText = "Erro ❌";
+      statusEl.style.color = "red";
+    });
 };
+
+function login() {
+  const email = document.getElementById("email").value;
+  const senha = document.getElementById("senha").value;
+
+  fetch(API + "/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password: senha })
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.token) {
+        loginDiv.style.display = "none";
+        painel.style.display = "block";
+        carregarEventos();
+      } else {
+        alert("Login inválido");
+      }
+    });
+}
+
+function criarEvento() {
+  const nome = document.getElementById("nomeEvento").value;
+  const data = document.getElementById("dataEvento").value;
+
+  fetch(API + "/events", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ nome, data })
+  })
+    .then(() => carregarEventos());
+}
+
+function carregarEventos() {
+  fetch(API + "/events")
+    .then(res => res.json())
+    .then(eventos => {
+      const lista = document.getElementById("listaEventos");
+      lista.innerHTML = "";
+      eventos.forEach(ev => {
+        const div = document.createElement("div");
+        div.className = "evento";
+        div.innerText = `${ev.nome} - ${ev.data}`;
+        lista.appendChild(div);
+      });
+    });
+}
