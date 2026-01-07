@@ -1,23 +1,31 @@
 {
-  "name": "bmp-backend",
+  "name": "beach-master-pro-backend",
   "version": "1.0.0",
   "scripts": {
-    "start": "node src/server.js",
-    "start:dev": "node src/server.js",
-    "build": "echo 'No build step needed'"
+    "start": "nest start",
+    "start:dev": "nest start --watch",
+    "build": "nest build",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
     "@nestjs/core": "^10.0.0",
     "@nestjs/jwt": "^10.0.0",
     "@nestjs/passport": "^10.0.0",
-    "@prisma/client": "^5.0.0",
+    "@prisma/client": "^5.7.0",
     "bcrypt": "^5.1.0",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^7.8.1",
     "express": "^4.18.2",
     "cors": "^2.8.5",
     "mongoose": "^7.0.0",
     "dotenv": "^16.0.0"
+  },
+  "devDependencies": {
+    "prisma": "^5.7.0",
+    "typescript": "^5.3.3"
   }
 }
