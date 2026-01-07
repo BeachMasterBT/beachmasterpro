@@ -2,65 +2,57 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import helmet from "helmet";
 
 dotenv.config();
+
 const app = express();
-
 app.use(cors());
-app.use(helmet());
 app.use(express.json());
-app.use(express.static("src/public"));
 
+// 🔌 Conexão com MongoDB
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log("✅ MongoDB conectado"))
   .catch(err => console.error("❌ Erro MongoDB:", err));
 
-/* MODELOS */
-const Evento = mongoose.model(
-  "Evento",
-  new mongoose.Schema({
-    nome: String,
-    data: String,
-    createdAt: { type: Date, default: Date.now }
-  })
-);
+// 📦 Model
+const EventoSchema = new mongoose.Schema({
+  nome: String,
+  data: String,
+  criadoEm: { type: Date, default: Date.now }
+});
+const Evento = mongoose.model("Evento", EventoSchema);
 
-/* HEALTH CHECK */
+// 🟢 Health Check (obrigatório para frontend)
 app.get("/health", (req, res) => {
-  res.json({ status: "OK", app: "Beach Master Pro" });
+  res.json({ status: "OK" });
 });
 
-/* LOGIN SIMPLES (MVP CONTROLADO) */
+// 🔐 Login simples (MVP)
 app.post("/auth/login", (req, res) => {
   const { email, password } = req.body;
 
-  if (
-    email === "beachmasterbt@gmail.com" &&
-    password === "Sama1106"
-  ) {
-    return res.json({
-      message: "Login OK",
-      token: "beachmaster-token-ok"
-    });
+  if (email === "beachmasterbt@gmail.com" && password === "Sama1106") {
+    return res.json({ token: "login-ok", user: { email } });
   }
 
-  res.status(401).json({ message: "Credenciais inválidas" });
+  return res.status(401).json({ message: "Credenciais inválidas" });
 });
 
-/* EVENTOS */
+// 📋 Listar eventos
 app.get("/events", async (req, res) => {
-  const eventos = await Evento.find().sort({ createdAt: -1 });
+  const eventos = await Evento.find().sort({ criadoEm: -1 });
   res.json(eventos);
 });
 
+// ➕ Criar evento
 app.post("/events", async (req, res) => {
-  const evento = new Evento(req.body);
-  await evento.save();
-  res.json({ message: "Evento criado", evento });
+  const { nome, data } = req.body;
+  const novoEvento = new Evento({ nome, data });
+  await novoEvento.save();
+  res.json(novoEvento);
 });
 
-/* START */
+// 🚀 Start
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () =>
   console.log(`🚀 Beach Master Pro rodando na porta ${PORT}`)
