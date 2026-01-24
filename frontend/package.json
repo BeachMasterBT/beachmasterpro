@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "name": "beach-master-pro-frontend",
   "version": "1.0.0",
   "scripts": {
@@ -22,5 +23,18 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+=======
+  "name": "bmp-frontend",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "14.0.0",
+    "react": "18.2.0",
+    "axios": "^1.6.0"
+>>>>>>> 773f9197686b61d0185d6773a4c40c22a8d6642d
   }
 }

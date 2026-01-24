@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beach Master Pro 5D</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+  <h1>🏖️ BEACH MASTER</h1>
+  <div id="status" style="text-align:center; font-size:12px; margin-bottom: 10px;">Conectando...</div>
+
+  <div class="nav-tabs" id="menu" style="display:none;">
+    <span id="tab-ev" class="active-tab" onclick="showTab('eventos')">Torneios</span>
+    <span id="tab-ra" onclick="showTab('ranking')">Ranking</span>
+    <span id="tab-li" onclick="showTab('lifkin')">Lif Kin</span>
+  </div>
+
+  <div id="login-section">
+    <input type="email" id="email" placeholder="E-mail">
+    <input type="password" id="senha" placeholder="Senha">
+    <button onclick="fazerLogin()">ENTRAR NA PLATAFORMA</button>
+  </div>
+
+  <div id="section-eventos" style="display:none;">
+    <h3>Novo Torneio (CBBT 2025)</h3>
+    <input type="text" id="nomeEv" placeholder="Nome do Torneio">
+    <select id="catEv">
+        <option value="Profissional">Profissional</option>
+        <option value="Amador A">Amador A</option>
+        <option value="Amador B">Amador B</option>
+        <option value="Sub 12">Sub 12</option>
+        <option value="+40">+40</option>
+    </select>
+    <button onclick="salvarEvento()">PUBLICAR TORNEIO</button>
+    <div id="listaEventos"></div>
+  </div>
+
+  <div id="section-ranking" style="display:none;">
+    <h3>🏆 Ranking Oficial</h3>
+    <div id="listaRanking">
+      <div class="card">1º Lugar - Carregando...</div>
+    </div>
+  </div>
+
+  <div id="section-lifkin" style="display:none;">
+    <h3>📱 Rede Lif Kin</h3>
+    <input type="text" id="postText" placeholder="O que está a acontecer na areia?">
+    <button onclick="postarLifKin()">POSTAR AGORA</button>
+    <div id="feedLifKin"></div>
+  </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
