@@ -1,0 +1,22 @@
+{
+	"folders": [
+		{
+			"path": "../beachmasterfinal/data"
+		},
+		{
+			"path": "../beachmasterfinal/db"
+		},
+		{
+			"path": "../beachmasterfinal/deploy"
+		},
+		{
+			"path": "../beachmasterfinal/public"
+		},
+		{
+			"path": "../beachmasterfinal/server"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "public"
+	}
+}

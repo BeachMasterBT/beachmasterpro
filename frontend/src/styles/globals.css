@@ -1,0 +1,21 @@
+:root {
+  --orange-beach: #ff7e5f;
+  --blue-ocean: #feb47b;
+  --dark-sand: #2c3e50;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, var(--orange-beach), var(--blue-ocean));
+  color: white;
+  min-height: 100vh;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
