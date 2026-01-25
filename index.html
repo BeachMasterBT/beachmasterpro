@@ -1,11 +1,152 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Beach Master Pro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beach Master Pro - Placar Oficial</title>
+    <style>
+        :root {
+            --primary: #fbbf24; /* Amarelo Beach */
+            --bg: #111827; /* Fundo Escuro TV */
+            --card: #1f2937;
+            --text: #ffffff;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Arial Black', sans-serif; }
+        body { background-color: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 10px; }
+        
+        .header { text-align: center; margin-bottom: 15px; width: 100%; border-bottom: 2px solid var(--primary); padding-bottom: 5px; }
+        .header h1 { font-size: 1.2rem; color: var(--primary); text-transform: uppercase; }
+
+        .scoreboard { background: var(--card); width: 100%; max-width: 500px; border-radius: 15px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid #374151; }
+        
+        .team-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+        .team-name { font-size: 1.1rem; flex: 1; text-transform: uppercase; }
+        .stats { display: flex; gap: 10px; }
+        .box { background: #000; padding: 10px; border-radius: 8px; min-width: 45px; text-align: center; border: 1px solid #4b5563; }
+        .box-label { font-size: 0.6rem; color: #9ca3af; display: block; margin-bottom: 2px; }
+        .score-big { font-size: 1.8rem; color: var(--primary); }
+        .set-val { font-size: 1.5rem; color: #fff; }
+
+        .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 500px; margin-top: 20px; }
+        button { padding: 20px; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: 0.2s; font-size: 0.9rem; }
+        .btn-ponto { background: var(--primary); color: #000; height: 80px; font-size: 1.1rem; }
+        .btn-ponto:active { transform: scale(0.95); }
+        .btn-action { background: #374151; color: #fff; padding: 12px; }
+        
+        .demo-badge { background: #ef4444; font-size: 0.6rem; padding: 2px 5px; border-radius: 4px; vertical-align: middle; margin-left: 5px; }
+        .footer-btns { margin-top: 30px; display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 500px; }
+        .btn-demo { background: #1f2937; color: #6b7280; font-size: 0.7rem; border: 1px dashed #4b5563; text-align: left; padding: 10px; }
+    </style>
 </head>
 <body>
-    <h1>Beach Master Pro - Em breve seu placar oficial!</h1>
-    <p>O site está sendo configurado para a Fase C.</p>
+
+    <div class="header">
+        <h1>Beach Master Pro <small style="font-size: 0.5rem; color: white;">v1.0</small></h1>
+    </div>
+
+    <div class="scoreboard">
+        <div class="team-row">
+            <div class="team-name">Time A</div>
+            <div class="stats">
+                <div class="box"><span class="box-label">SETS</span><span id="setsA" class="set-val">0</span></div>
+                <div class="box"><span class="box-label">GAME</span><span id="gamesA" class="set-val">0</span></div>
+                <div class="box" style="background: #27272a;"><span class="box-label">PONTO</span><span id="pontoA" class="score-big">0</span></div>
+            </div>
+        </div>
+
+        <div class="team-row">
+            <div class="team-name">Time B</div>
+            <div class="stats">
+                <div class="box"><span class="box-label">SETS</span><span id="setsB" class="set-val">0</span></div>
+                <div class="box"><span class="box-label">GAME</span><span id="gamesB" class="set-val">0</span></div>
+                <div class="box" style="background: #27272a;"><span class="box-label">PONTO</span><span id="pontoB" class="score-big">0</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn-ponto" onclick="marcarPonto('A')">+ Ponto A</button>
+        <button class="btn-ponto" onclick="marcarPonto('B')">+ Ponto B</button>
+        <button class="btn-action" onclick="desfazer()">Desfazer</button>
+        <button class="btn-action" onclick="novaPartida()">Novo Jogo</button>
+    </div>
+
+    <div class="footer-btns">
+        <button class="btn-demo">Análise IA <span class="demo-badge">PREVIEW</span></button>
+        <button class="btn-demo">Painel Admin <span class="demo-badge">DEMO</span></button>
+        <button class="btn-demo">Licença PRO <span class="demo-badge">DEMO</span></button>
+    </div>
+
+    <script>
+        let estado = {
+            pA: 0, pB: 0, gA: 0, gB: 0, sA: 0, sB: 0,
+            historico: []
+        };
+
+        const pontosBT = [0, 15, 30, 40, 'GAME'];
+
+        function salvar() {
+            localStorage.setItem('beachMasterData', JSON.stringify(estado));
+            atualizarTela();
+        }
+
+        function atualizarTela() {
+            document.getElementById('pontoA').innerText = pontosBT[estado.pA];
+            document.getElementById('pontoB').innerText = pontosBT[estado.pB];
+            document.getElementById('gamesA').innerText = estado.gA;
+            document.getElementById('gamesB').innerText = estado.gB;
+            document.getElementById('setsA').innerText = estado.sA;
+            document.getElementById('setsB').innerText = estado.sB;
+        }
+
+        function marcarPonto(time) {
+            estado.historico.push(JSON.stringify(estado));
+            
+            if (time === 'A') {
+                estado.pA++;
+                if (estado.pA > 3) vencerGame('A');
+            } else {
+                estado.pB++;
+                if (estado.pB > 3) vencerGame('B');
+            }
+            salvar();
+        }
+
+        function vencerGame(time) {
+            estado.pA = 0; estado.pB = 0;
+            if (time === 'A') {
+                estado.gA++;
+                if (estado.gA >= 6) vencerSet('A');
+            } else {
+                estado.gB++;
+                if (estado.gB >= 6) vencerSet('B');
+            }
+        }
+
+        function vencerSet(time) {
+            estado.gA = 0; estado.gB = 0;
+            if (time === 'A') estado.sA++;
+            else estado.sB++;
+        }
+
+        function desfazer() {
+            if (estado.historico.length > 0) {
+                estado = JSON.parse(estado.historico.pop());
+                salvar();
+            }
+        }
+
+        function novaPartida() {
+            if (confirm("Zerar placar?")) {
+                estado = { pA: 0, pB: 0, gA: 0, gB: 0, sA: 0, sB: 0, historico: [] };
+                salvar();
+            }
+        }
+
+        // Carregar ao abrir
+        const salvo = localStorage.getItem('beachMasterData');
+        if (salvo) estado = JSON.parse(salvo);
+        atualizarTela();
+    </script>
 </body>
 </html>
