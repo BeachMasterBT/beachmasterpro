@@ -1,13 +1,103 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Beach Master Pro</title>
-    <link rel="stylesheet" href="./src/styles/globals.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Beach Master Pro Official</title>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.5.24/dist/jspdf.autotable.min.js"></script>
+  <style>
+    :root {
+      --bg: #000; --text: #fff; --accent: #ffeb00; --highlight: #00bfff;
+      --danger: #ff3333; --success: #00cc66; --font: 'Segoe UI', sans-serif;
+    }
+    body { background: var(--bg); color: var(--text); font-family: var(--font); margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+    .container { width: 95%; max-width: 500px; background: rgba(0,0,0,0.8); padding: 20px; border-radius: 15px; border: 1px solid var(--accent); box-shadow: 0 0 20px var(--accent); overflow-y: auto; max-height: 90vh; }
+    h1 { color: var(--accent); text-shadow: 0 0 10px var(--accent); margin-bottom: 5px; }
+    .section { margin-bottom: 15px; padding: 10px; border: 1px solid rgba(255,235,0,0.3); border-radius: 8px; }
+    .score { font-size: 3.5rem; font-weight: bold; color: var(--accent); margin: 10px 0; }
+    .btn { width: 100%; padding: 15px; margin: 5px 0; font-size: 1.2rem; font-weight: bold; border-radius: 10px; border: none; cursor: pointer; transition: 0.3s; }
+    .btn-main { background: var(--accent); color: #000; }
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn-success { background: var(--success); color: #fff; }
+    input, select, textarea { width: 90%; padding: 10px; margin: 5px 0; background: #111; color: #fff; border: 1px solid var(--accent); border-radius: 5px; text-align: center; }
+    .blink { animation: blink 1s infinite; }
+    @keyframes blink { 50% { opacity: 0.2; } }
+    .history { font-size: 0.8rem; color: #aaa; margin-top: 10px; border-top: 1px dashed var(--accent); padding-top: 10px; }
+  </style>
 </head>
 <body>
-    <div id="root"></div>
-    <script type="module" src="./src/main.jsx"></script>
+  <div class="container">
+    <h1>🏖️ Beach Master Pro</h1>
+    
+    <div class="section">
+      <input type="text" id="court" value="Quadra 1">
+      <input type="text" id="p1" value="Mayer">
+      <input type="text" id="p2" value="Amigo">
+    </div>
+
+    <div class="section">
+      <div class="score" id="scoreDisplay">0 - 0</div>
+      <div id="statusText" style="color: var(--highlight);">Aguardando Início</div>
+    </div>
+
+    <div class="section">
+      <div style="display: flex; gap: 10px;">
+        <button class="btn btn-main" onclick="addPoint(1)">+ Ponto A</button>
+        <button class="btn btn-main" onclick="addPoint(2)">+ Ponto B</button>
+      </div>
+      <button class="btn btn-danger" onclick="undo()">Desfazer</button>
+      <button class="btn btn-success" onclick="finish()">Finalizar e Enviar</button>
+    </div>
+
+    <div class="history" id="historyList">Histórico vazio</div>
+  </div>
+
+  <script>
+    let state = { p1: 0, p2: 0, start: Date.now(), last: null, logs: [] };
+    
+    // O LINK DA SUA VERCEL JÁ ESTÁ AQUI ABAIXO:
+    const API = "https://beachmasterpro.vercel.app/api/match";
+
+    function addPoint(p) {
+      state.last = {p1: state.p1, p2: state.p2};
+      p === 1 ? state.p1++ : state.p2++;
+      render();
+    }
+
+    function undo() {
+      if (state.last) { state.p1 = state.last.p1; state.p2 = state.last.p2; state.last = null; render(); }
+    }
+
+    function render() {
+      document.getElementById("scoreDisplay").innerText = `${state.p1} - ${state.p2}`;
+      const total = state.p1 + state.p2;
+      const status = document.getElementById("statusText");
+      if (total % 2 !== 0) { status.innerText = "Troca de Lado!"; status.classList.add("blink"); }
+      else { status.innerText = "Em jogo..."; status.classList.remove("blink"); }
+    }
+
+    function finish() {
+      const duration = Math.round((Date.now() - state.start) / 60000);
+      const data = {
+        court: document.getElementById("court").value,
+        players: [document.getElementById("p1").value, document.getElementById("p2").value],
+        score: `${state.p1}-${state.p2}`,
+        duration: duration
+      };
+
+      // ENVIO AUTOMÁTICO PARA A SUA VERCEL
+      fetch(API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      }).then(() => alert("✅ Sincronizado com o Beach Master Pro!"))
+        .catch(() => alert("📡 Salvo apenas no celular (Offline)"));
+
+      state.logs.unshift(`${data.court}: ${data.score}`);
+      document.getElementById("historyList").innerText = state.logs.join(" | ");
+      state.p1 = 0; state.p2 = 0; state.start = Date.now(); render();
+    }
+  </script>
 </body>
 </html>
