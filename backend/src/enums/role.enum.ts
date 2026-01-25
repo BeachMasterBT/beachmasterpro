@@ -1,7 +1,0 @@
-export enum Role {
-  ADMIN_MASTER = 'ADMIN_MASTER',
-  ADMIN = 'ADMIN',
-  ORGANIZER = 'ORGANIZER',
-  REFEREE = 'REFEREE',
-  ATHLETE = 'ATHLETE',
-}
